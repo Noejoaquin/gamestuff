@@ -1,0 +1,10 @@
+.board {
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+.board-tile {
+  height: 100px;
+  border: 1px solid blue;
+  text-align: center;
+}
