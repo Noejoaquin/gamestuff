@@ -16,13 +16,19 @@ class Board {
 
 class Game {
   constructor() {
-    let board = new Board;
     const player1 = new Player("X");
     const player2 = new Player("O");
+    let board = new Board;
+    let playerToMove = null;
   }
 
   playGame() {
     console.log("playing game!!!")
+
+    while (!Board.gameOver()) {
+      let playerToPlay = determinePlayerToPlay();
+      document.getElementById('player-to-play').innerHTML = ""
+    }
   }
 }
 
