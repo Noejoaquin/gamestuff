@@ -16,8 +16,7 @@ class Board {
         col = 0
       }
     	let newDiv = document.createElement("div")
-      newDiv.setAttribute("id", `tile:${row},${col}`)
-      // newDiv.innerText = `${i}`
+      newDiv.setAttribute("id", `tile:${row},${col}`) // coordinates on the dom
       newDiv.addEventListener("click", this.playerMove.bind(this))
       newDiv.setAttribute("style",
        "height: 100px; border: 1px solid blue; text-align: center;"
@@ -44,23 +43,49 @@ class Board {
   }
 
   playerMove(e){
-    // debugger
     let marker = this.determineMarker();
-    // debugger
     if (e.target.innerText === "") {
-      debugger
       e.target.innerText = marker;
       this.lastMarkerPlayed = marker;
-      e.target.id.match(/(\d+)/);
-      // grab the coordinates from the id
-      this.checkWinner()
+      const [row, col] = this.determineCoordinates(e)
+      this.updateBoard(row, col, marker)
+      const winner = this.checkWinner()
+      // debugger
+      if (winner) {
+        this.gameOver(winner)
+      } else if (this.tie()){
+        alert("tie!")
+      }
     } else {
       alert("That space is taken!")
     }
   }
 
-  play(playerToPlay) {
+  tie() {
+    let nullCount = 0;
+    this.board.forEach(row => {
+      row.forEach(cell => {
+        if (!cell) {
+          nullCount ++;
+        }
+      })
+    })
+    if (nullCount === 0) { return true }
+  }
 
+  gameOver(winner) {
+    alert(`winner is: ${winner}`)
+  }
+
+  updateBoard(row, col, marker){
+    this.board[row][col] = marker
+  }
+
+  determineCoordinates(e) { // e.target
+    return e.target.id.split(":")[1].split(",").map(el => parseInt(el))
+  }
+
+  play(playerToPlay) {
     console.log('playing')
   }
 
@@ -69,7 +94,55 @@ class Board {
   }
 
   checkWinner() {
-    return "check winner"
+    //checking rows
+    for (let i = 0; i < this.board.length; i++) {
+      let count = 0;
+      for (let j = 0; j < this.board.length; j ++) {
+        const cell = this.board[i][j]
+        if(cell === this.lastMarkerPlayed) {
+          count ++
+          if (count === this.board.length) { return this.lastMarkerPlayed }
+        } else {
+          continue;
+        }
+      }
+    }
+
+    //check columns
+    for (let i = 0; i < this.board.length; i ++) {
+      let count = 0;
+      for (let j = 0; j < this.board.length; j ++) {
+        const cell = this.board[j][i];
+        if (cell === this.lastMarkerPlayed) {
+          count ++
+          if (count === this.board.length) { return this.lastMarkerPlayed }
+        } else {
+          continue;
+        }
+      }
+    }
+
+    //check diagonal left to right
+    let diagonalCount = 0;
+    for (let i = 0; i < this.board.length; i ++) {
+      if (this.board[i][i] === this.lastMarkerPlayed) {
+        diagonalCount ++;
+        if (diagonalCount === this.board.length) { return this.lastMarkerPlayed }
+      } else {
+        continue;
+      }
+    }
+
+    // check diagonal right to left
+    let diagonal2Count = 0
+    for (let i = 0, j = 2; i < this.board.length; i ++, j --) {
+      if (this.board[i][j] === this.lastMarkerPlayed) {
+        diagonal2Count ++;
+        if (diagonal2Count === this.board.length) { return this.lastMarkerPlayed }
+      } else {
+        continue;
+      }
+    }
   }
 
   determineMarker() {
