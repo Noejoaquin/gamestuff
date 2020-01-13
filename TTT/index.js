@@ -50,7 +50,6 @@ class Board {
       const [row, col] = this.determineCoordinates(e)
       this.updateBoard(row, col, marker)
       const winner = this.checkWinner()
-      // debugger
       if (winner) {
         this.gameOver(winner)
       } else if (this.tie()){
@@ -162,19 +161,7 @@ class Game {
     this.board = new Board(boardSize);
     this.lastPlayerToMove = null;
   }
-
-  playGame() {
-    console.log("playing game!!!")
-    window.setInterval(() => {
-      if (this.board.winner()) {
-        return this.board.winner
-      } else if (this.board.tied) {
-        console.log("it's a tie!")
-      }
-    }, 3000)
-  }
 }
 
 
 const game = new Game(3);
-game.playGame();
